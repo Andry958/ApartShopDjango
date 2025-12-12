@@ -1,0 +1,162 @@
+[
+  {
+    "model": "apartments.Apartment",
+    "pk": 1,
+    "fields": {
+      "title": "Modern Studio in Downtown",
+      "description": "Compact and fully furnished modern studio in the city center.",
+      "apartment_type": "ST",
+      "price": 550.00,
+      "square_meters": 28.5,
+      "floor": 3,
+      "address": "12 Green Street, City Center",
+      "is_available": true,
+      "created_at": "2025-01-12T10:24:00Z",
+      "updated_at": "2025-01-12T10:24:00Z"
+    }
+  },
+  {
+    "model": "apartments.Apartment",
+    "pk": 2,
+    "fields": {
+      "title": "Cozy 1-Bedroom Apartment",
+      "description": "A quiet and cozy 1-bedroom apartment near the park.",
+      "apartment_type": "1B",
+      "price": 700.00,
+      "square_meters": 40.0,
+      "floor": 2,
+      "address": "5 Maple Avenue, Riverside",
+      "is_available": true,
+      "created_at": "2025-02-11T14:00:00Z",
+      "updated_at": "2025-02-11T14:00:00Z"
+    }
+  },
+  {
+    "model": "apartments.Apartment",
+    "pk": 3,
+    "fields": {
+      "title": "Spacious 2-Bedroom Apartment",
+      "description": "A spacious 2-bedroom flat with a balcony and a great view.",
+      "apartment_type": "2B",
+      "price": 950.00,
+      "square_meters": 62.0,
+      "floor": 6,
+      "address": "44 Oak Street, New District",
+      "is_available": false,
+      "created_at": "2025-03-05T08:40:00Z",
+      "updated_at": "2025-03-05T08:40:00Z"
+    }
+  },
+  {
+    "model": "apartments.Apartment",
+    "pk": 4,
+    "fields": {
+      "title": "Luxury Penthouse with Terrace",
+      "description": "High-end penthouse featuring a private terrace and premium interiors.",
+      "apartment_type": "PH",
+      "price": 2400.00,
+      "square_meters": 110.0,
+      "floor": 12,
+      "address": "1 Sky Tower, Central Avenue",
+      "is_available": true,
+      "created_at": "2025-02-20T12:15:00Z",
+      "updated_at": "2025-02-20T12:15:00Z"
+    }
+  },
+  {
+    "model": "apartments.Apartment",
+    "pk": 5,
+    "fields": {
+      "title": "Affordable Studio for Students",
+      "description": "Small but practical studio located near the university campus.",
+      "apartment_type": "ST",
+      "price": 380.00,
+      "square_meters": 22.0,
+      "floor": 1,
+      "address": "19 College Road, University District",
+      "is_available": true,
+      "created_at": "2025-01-28T09:10:00Z",
+      "updated_at": "2025-01-28T09:10:00Z"
+    }
+  },
+  {
+    "model": "apartments.Apartment",
+    "pk": 6,
+    "fields": {
+      "title": "2-Bedroom Apartment Near Metro",
+      "description": "Bright apartment with modern kitchen and easy metro access.",
+      "apartment_type": "2B",
+      "price": 890.00,
+      "square_meters": 58.0,
+      "floor": 4,
+      "address": "77 Metro Lane, East District",
+      "is_available": false,
+      "created_at": "2025-03-01T13:22:00Z",
+      "updated_at": "2025-03-01T13:22:00Z"
+    }
+  },
+  {
+    "model": "apartments.Apartment",
+    "pk": 7,
+    "fields": {
+      "title": "1-Bedroom Loft with High Ceilings",
+      "description": "Stylish loft apartment featuring high ceilings and large windows.",
+      "apartment_type": "1B",
+      "price": 780.00,
+      "square_meters": 48.0,
+      "floor": 5,
+      "address": "33 Loft Street, Old Town",
+      "is_available": true,
+      "created_at": "2025-01-19T07:33:00Z",
+      "updated_at": "2025-01-19T07:33:00Z"
+    }
+  },
+  {
+    "model": "apartments.Apartment",
+    "pk": 8,
+    "fields": {
+      "title": "Large Family Apartment (3 Bedrooms)",
+      "description": "Perfect large family home with playground and parking nearby.",
+      "apartment_type": "3B",
+      "price": 1300.00,
+      "square_meters": 85.0,
+      "floor": 7,
+      "address": "88 Family Street, West District",
+      "is_available": true,
+      "created_at": "2025-02-09T16:45:00Z",
+      "updated_at": "2025-02-09T16:45:00Z"
+    }
+  },
+  {
+    "model": "apartments.Apartment",
+    "pk": 9,
+    "fields": {
+      "title": "Compact Studio with Mountain View",
+      "description": "Small but cozy studio with an amazing mountain view.",
+      "apartment_type": "ST",
+      "price": 420.00,
+      "square_meters": 25.0,
+      "floor": 8,
+      "address": "5 Hill Street, Mountain Side",
+      "is_available": false,
+      "created_at": "2025-03-10T11:55:00Z",
+      "updated_at": "2025-03-10T11:55:00Z"
+    }
+  },
+  {
+    "model": "apartments.Apartment",
+    "pk": 10,
+    "fields": {
+      "title": "Premium 2-Bedroom Apartment",
+      "description": "Elegant 2-bedroom apartment with premium finishing.",
+      "apartment_type": "2B",
+      "price": 1150.00,
+      "square_meters": 72.0,
+      "floor": 10,
+      "address": "9 Gold Avenue, Central District",
+      "is_available": true,
+      "created_at": "2025-02-03T18:20:00Z",
+      "updated_at": "2025-02-03T18:20:00Z"
+    }
+  }
+]

@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1 class="my-2">Apartment Details</h1>
+
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{ apartment.title }}</h5>
+        <p class="card-text text-muted">{{ apartment.get_apartment_type_display }}</p>
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge text-bg-primary">
+            {{ apartment.square_meters }} m²
+          </span>
+          {% if apartment.is_available %}
+          <span class="badge text-bg-success">Available</span>
+          {% else %}
+          <span class="badge text-bg-danger">Not available</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <strong>Price:</strong> ${{ apartment.price }}
+        </li>
+        <li class="list-group-item">
+          <strong>Address:</strong> {{ apartment.address }}
+        </li>
+        <li class="list-group-item">
+          <strong>Floor:</strong> {{ apartment.floor }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">Description</div>
+      <div class="card-body">
+        <p class="mb-3">{{ apartment.description }}</p>
+
+        <p class="mb-1"><strong>Type:</strong> {{ apartment.get_apartment_type_display }}</p>
+        <p class="mb-1"><strong>Area:</strong> {{ apartment.square_meters }} m²</p>
+        <p class="mb-1"><strong>Price:</strong> ${{ apartment.price }}</p>
+        <p class="mb-1"><strong>Floor:</strong> {{ apartment.floor }}</p>
+        <p class="mb-1"><strong>Address:</strong> {{ apartment.address }}</p>
+        <p class="mb-0"><strong>Status:</strong> 
+          {% if apartment.is_available %}
+            Available
+          {% else %}
+            Not available
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

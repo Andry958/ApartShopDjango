@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1 class="my-2">Apartments List</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Title</th>
+      <th scope="col">Type</th>
+      <th scope="col">Area (m²)</th>
+      <th scope="col">Price</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for apartment in apartments %}
+    <tr>
+      <th scope="row">{{ apartment.id }}</th>
+      <td>
+        <a href="/apartments/{{ apartment.id }}">
+          {{ apartment.title }}
+        </a>
+      </td>
+      <td>{{ apartment.get_apartment_type_display }}</td>
+      <td>{{ apartment.square_meters }}</td>
+      <td>${{ apartment.price }}</td>
+      <td>
+        <a href="/apartments/delete/{{ apartment.id }}" class="btn btn-sm">
+          <i class="fa-solid fa-trash-can"></i>
+        </a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="6" class="text-muted">No apartments found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
