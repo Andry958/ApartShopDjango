@@ -1,59 +1,175 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1 class="my-2">Apartment Details</h1>
+<div class="container my-4">
+    <!-- Повідомлення -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
 
-<div class="row g-4">
-  <div class="col-md-4">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">{{ apartment.title }}</h5>
-        <p class="card-text text-muted">{{ apartment.get_apartment_type_display }}</p>
-        <div class="d-flex align-items-center gap-2">
-          <span class="badge text-bg-primary">
-            {{ apartment.square_meters }} m²
-          </span>
-          {% if apartment.is_available %}
-          <span class="badge text-bg-success">Available</span>
-          {% else %}
-          <span class="badge text-bg-danger">Not available</span>
-          {% endif %}
+    <!-- Навігація -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'apartment_list' %}">Квартири</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ apartment.title }}</li>
+        </ol>
+    </nav>
+
+    <!-- Заголовок -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">{{ apartment.title }}</h1>
+        <div class="btn-group" role="group">
+            {% if is_favorite %}
+                <a href="{% url 'remove_from_favorites' apartment.pk %}" class="btn btn-danger">
+                    <i class="fas fa-heart"></i> Видалити з улюблених
+                </a>
+            {% else %}
+                <a href="{% url 'add_to_favorites' apartment.pk %}" class="btn btn-outline-danger">
+                    <i class="far fa-heart"></i> Додати до улюблених
+                </a>
+            {% endif %}
+            <a href="{% url 'apartment_update' apartment.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Редагувати
+            </a>
+            <a href="{% url 'apartment_delete' apartment.pk %}" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Видалити
+            </a>
         </div>
-      </div>
-
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <strong>Price:</strong> ${{ apartment.price }}
-        </li>
-        <li class="list-group-item">
-          <strong>Address:</strong> {{ apartment.address }}
-        </li>
-        <li class="list-group-item">
-          <strong>Floor:</strong> {{ apartment.floor }}
-        </li>
-      </ul>
     </div>
-  </div>
 
-  <div class="col-md-8">
-    <div class="card">
-      <div class="card-header">Description</div>
-      <div class="card-body">
-        <p class="mb-3">{{ apartment.description }}</p>
+    <div class="row g-4">
+        <!-- Основна інформація -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Опис</h5>
+                </div>
+                <div class="card-body">
+                    <p class="lead">{{ apartment.description }}</p>
+                </div>
+            </div>
 
-        <p class="mb-1"><strong>Type:</strong> {{ apartment.get_apartment_type_display }}</p>
-        <p class="mb-1"><strong>Area:</strong> {{ apartment.square_meters }} m²</p>
-        <p class="mb-1"><strong>Price:</strong> ${{ apartment.price }}</p>
-        <p class="mb-1"><strong>Floor:</strong> {{ apartment.floor }}</p>
-        <p class="mb-1"><strong>Address:</strong> {{ apartment.address }}</p>
-        <p class="mb-0"><strong>Status:</strong> 
-          {% if apartment.is_available %}
-            Available
-          {% else %}
-            Not available
-          {% endif %}
-        </p>
-      </div>
+            <!-- Детальна інформація -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-list"></i> Характеристики</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Тип квартири:</dt>
+                                <dd class="col-sm-7">
+                                    <span class="badge bg-info">{{ apartment.get_apartment_type_display }}</span>
+                                </dd>
+
+                                <dt class="col-sm-5">Площа:</dt>
+                                <dd class="col-sm-7">{{ apartment.square_meters }} м²</dd>
+
+                                <dt class="col-sm-5">Поверх:</dt>
+                                <dd class="col-sm-7">{{ apartment.floor }}</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-5">Ціна:</dt>
+                                <dd class="col-sm-7">
+                                    <strong class="text-success fs-4">${{ apartment.price }}</strong>
+                                </dd>
+
+                                <dt class="col-sm-5">Статус:</dt>
+                                <dd class="col-sm-7">
+                                    {% if apartment.is_available %}
+                                        <span class="badge bg-success">Доступна</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Продано</span>
+                                    {% endif %}
+                                </dd>
+
+                                <dt class="col-sm-5">Адреса:</dt>
+                                <dd class="col-sm-7">
+                                    <i class="fas fa-map-marker-alt text-danger"></i> 
+                                    {{ apartment.address }}
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Бічна панель -->
+        <div class="col-md-4">
+            <!-- Ціна -->
+            <div class="card mb-4 border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-dollar-sign"></i> Ціна</h5>
+                </div>
+                <div class="card-body text-center">
+                    <h2 class="text-success mb-3">${{ apartment.price }}</h2>
+                    <p class="text-muted mb-0">{{ apartment.square_meters }} м²</p>
+                    <hr>
+                    <p class="mb-0">
+                        <small>Ціна за м²: <strong>${{ apartment.price|floatformat:2 }}</strong></small>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Локація -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-map-marker-alt"></i> Локація</h6>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2"><strong>Адреса:</strong></p>
+                    <p class="text-muted">{{ apartment.address }}</p>
+                    <p class="mb-0"><strong>Поверх:</strong> {{ apartment.floor }}</p>
+                </div>
+            </div>
+
+            <!-- Статус -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-check-circle"></i> Статус</h6>
+                </div>
+                <div class="card-body text-center">
+                    {% if apartment.is_available %}
+                        <span class="badge bg-success fs-6 mb-2">Доступна для продажу</span>
+                        <p class="text-muted small mb-0">Ця квартира доступна для перегляду та покупки</p>
+                    {% else %}
+                        <span class="badge bg-secondary fs-6 mb-2">Продано</span>
+                        <p class="text-muted small mb-0">Ця квартира вже продана</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Інформація про запис -->
+            <div class="card">
+                <div class="card-body">
+                    <small class="text-muted">
+                        <p class="mb-1">
+                            <i class="fas fa-calendar-plus"></i> 
+                            Створено: {{ apartment.created_at|date:"d.m.Y H:i" }}
+                        </p>
+                        <p class="mb-0">
+                            <i class="fas fa-calendar-check"></i> 
+                            Оновлено: {{ apartment.updated_at|date:"d.m.Y H:i" }}
+                        </p>
+                    </small>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
+
+    <!-- Кнопка назад -->
+    <div class="mt-4">
+        <a href="{% url 'apartment_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Назад до списку
+        </a>
+    </div>
 </div>
 {% endblock %}

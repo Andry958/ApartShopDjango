@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> Підтвердження видалення
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Увага!</strong> Ця дія незворотна. Ви дійсно хочете видалити цю квартиру?
+                    </div>
+
+                    <div class="border rounded p-3 mb-4 bg-light">
+                        <h5 class="mb-3">{{ apartment.title }}</h5>
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="mb-2">
+                                    <strong>Тип:</strong> 
+                                    {{ apartment.get_apartment_type_display }}
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Площа:</strong> 
+                                    {{ apartment.square_meters }} м²
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Поверх:</strong> 
+                                    {{ apartment.floor }}
+                                </p>
+                            </div>
+                            <div class="col-6">
+                                <p class="mb-2">
+                                    <strong>Ціна:</strong> 
+                                    <span class="text-success">${{ apartment.price }}</span>
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Адреса:</strong> 
+                                    {{ apartment.address }}
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Статус:</strong> 
+                                    {% if apartment.is_available %}
+                                        <span class="badge bg-success">Доступна</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Недоступна</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'apartment_detail' apartment.pk %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Скасувати
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Так, видалити
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

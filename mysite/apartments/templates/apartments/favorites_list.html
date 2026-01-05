@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="container my-4">
-    <!-- Повідомлення -->
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -11,25 +10,16 @@
         {% endfor %}
     {% endif %}
 
-    <!-- Заголовок та статистика -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1>Список квартир</h1>
-            <p class="text-muted mb-0">
-                Всього: {{ total_apartments }} | Доступно: {{ available_apartments }}
-            </p>
+            <h1><i class="fas fa-heart text-danger"></i> Улюблені квартири</h1>
+            <p class="text-muted mb-0">Всього улюблених: {{ apartments.count }}</p>
         </div>
-        <div>
-            <a href="{% url 'favorites_list' %}" class="btn btn-outline-primary me-2">
-                <i class="fas fa-heart"></i> Улюблені ({{ favorite_ids|length }})
-            </a>
-            <a href="{% url 'apartment_create' %}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Додати квартиру
-            </a>
-        </div>
+        <a href="{% url 'apartment_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Назад до списку
+        </a>
     </div>
 
-    <!-- Таблиця квартир -->
     <div class="card">
         <div class="card-body">
             <table class="table table-hover">
@@ -67,33 +57,15 @@
                         </td>
                         <td class="text-center">
                             <div class="btn-group btn-group-sm" role="group">
-                                {% if apartment.id in favorite_ids %}
-                                    <a href="{% url 'remove_from_favorites' apartment.pk %}" 
-                                       class="btn btn-danger" 
-                                       title="Видалити з улюблених">
-                                        <i class="fas fa-heart"></i>
-                                    </a>
-                                {% else %}
-                                    <a href="{% url 'add_to_favorites' apartment.pk %}" 
-                                       class="btn btn-outline-danger" 
-                                       title="Додати до улюблених">
-                                        <i class="far fa-heart"></i>
-                                    </a>
-                                {% endif %}
+                                <a href="{% url 'remove_from_favorites' apartment.pk %}" 
+                                   class="btn btn-danger" 
+                                   title="Видалити з улюблених">
+                                    <i class="fas fa-heart-broken"></i>
+                                </a>
                                 <a href="{% url 'apartment_detail' apartment.pk %}" 
                                    class="btn btn-outline-primary" 
                                    title="Переглянути">
                                     <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{% url 'apartment_update' apartment.pk %}" 
-                                   class="btn btn-outline-warning" 
-                                   title="Редагувати">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a href="{% url 'apartment_delete' apartment.pk %}" 
-                                   class="btn btn-outline-danger" 
-                                   title="Видалити">
-                                    <i class="fas fa-trash"></i>
                                 </a>
                             </div>
                         </td>
@@ -101,10 +73,10 @@
                     {% empty %}
                     <tr>
                         <td colspan="8" class="text-center text-muted py-5">
-                            <i class="fas fa-home fa-3x mb-3"></i>
-                            <p>Поки що немає квартир.</p>
-                            <a href="{% url 'apartment_create' %}" class="btn btn-primary">
-                                Додати першу квартиру
+                            <i class="far fa-heart fa-3x mb-3"></i>
+                            <p>У вас поки немає улюблених квартир.</p>
+                            <a href="{% url 'apartment_list' %}" class="btn btn-primary">
+                                Переглянути всі квартири
                             </a>
                         </td>
                     </tr>
