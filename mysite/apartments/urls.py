@@ -10,4 +10,8 @@ urlpatterns = [
     path('<int:pk>/add-to-favorites/', views.add_to_favorites, name='add_to_favorites'),
     path('<int:pk>/remove-from-favorites/', views.remove_from_favorites, name='remove_from_favorites'),
     path('favorites/', views.favorites_list, name='favorites_list'),
+    path('<int:pk>/book/', views.booking_create, name='booking_create'),
+    path('bookings/', views.booking_list, name='booking_list'),
+    path('bookings/<int:pk>/', views.booking_detail, name='booking_detail'),
+    path('bookings/<int:pk>/cancel/', views.booking_cancel, name='booking_cancel'),
 ]

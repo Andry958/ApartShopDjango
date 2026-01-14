@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container my-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-calendar-check"></i> Деталі бронювання</h1>
+        {% if booking.status == 'pending' or booking.status == 'confirmed' %}
+            <a href="{% url 'booking_cancel' booking.pk %}" class="btn btn-danger">
+                <i class="fas fa-times"></i> Скасувати бронювання
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Інформація про бронювання</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Номер бронювання:</dt>
+                        <dd class="col-sm-8"><strong>#{{ booking.id }}</strong></dd>
+
+                        <dt class="col-sm-4">Статус:</dt>
+                        <dd class="col-sm-8">
+                            {% if booking.status == 'pending' %}
+                                <span class="badge bg-warning text-dark">Очікує підтвердження</span>
+                            {% elif booking.status == 'confirmed' %}
+                                <span class="badge bg-success">Підтверджено</span>
+                            {% elif booking.status == 'cancelled' %}
+                                <span class="badge bg-danger">Скасовано</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Завершено</span>
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-4">Дата початку:</dt>
+                        <dd class="col-sm-8">{{ booking.start_date|date:"d F Y" }}</dd>
+
+                        <dt class="col-sm-4">Дата закінчення:</dt>
+                        <dd class="col-sm-8">{{ booking.end_date|date:"d F Y" }}</dd>
+
+                        <dt class="col-sm-4">Кількість днів:</dt>
+                        <dd class="col-sm-8">{{ booking.calculate_days }} днів</dd>
+
+                        <dt class="col-sm-4">Загальна вартість:</dt>
+                        <dd class="col-sm-8"><h4 class="text-success">${{ booking.total_price }}</h4></dd>
+
+                        <dt class="col-sm-4">Дата створення:</dt>
+                        <dd class="col-sm-8">{{ booking.created_at|date:"d.m.Y H:i" }}</dd>
+                    </dl>
+
+                    {% if booking.notes %}
+                        <hr>
+                        <h6>Примітки:</h6>
+                        <p>{{ booking.notes }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Квартира</h5>
+                </div>
+                <div class="card-body">
+                    <h5>{{ booking.apartment.title }}</h5>
+                    <p class="text-muted">
+                        <i class="fas fa-map-marker-alt"></i> {{ booking.apartment.address }}
+                    </p>
+                    <hr>
+                    <dl class="row small">
+                        <dt class="col-6">Тип:</dt>
+                        <dd class="col-6">{{ booking.apartment.get_apartment_type_display }}</dd>
+                        
+                        <dt class="col-6">Площа:</dt>
+                        <dd class="col-6">{{ booking.apartment.square_meters }} м²</dd>
+                        
+                        <dt class="col-6">Поверх:</dt>
+                        <dd class="col-6">{{ booking.apartment.floor }}</dd>
+                    </dl>
+                    <a href="{% url 'apartment_detail' booking.apartment.pk %}" class="btn btn-sm btn-outline-primary w-100">
+                        <i class="fas fa-eye"></i> Переглянути квартиру
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'booking_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Назад до списку бронювань
+        </a>
+    </div>
+</div>
+{% endblock %}

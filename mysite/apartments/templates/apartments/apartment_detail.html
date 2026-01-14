@@ -23,6 +23,11 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mb-0">{{ apartment.title }}</h1>
         <div class="btn-group" role="group">
+            {% if user.is_authenticated and apartment.is_available %}
+                <a href="{% url 'booking_create' apartment.pk %}" class="btn btn-success">
+                    <i class="fas fa-calendar-plus"></i> Забронювати
+                </a>
+            {% endif %}
             {% if is_favorite %}
                 <a href="{% url 'remove_from_favorites' apartment.pk %}" class="btn btn-danger">
                     <i class="fas fa-heart"></i> Видалити з улюблених
@@ -32,12 +37,14 @@
                     <i class="far fa-heart"></i> Додати до улюблених
                 </a>
             {% endif %}
-            <a href="{% url 'apartment_update' apartment.pk %}" class="btn btn-warning">
-                <i class="fas fa-edit"></i> Редагувати
-            </a>
-            <a href="{% url 'apartment_delete' apartment.pk %}" class="btn btn-danger">
-                <i class="fas fa-trash"></i> Видалити
-            </a>
+            {% if user.is_staff %}
+                <a href="{% url 'apartment_update' apartment.pk %}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Редагувати
+                </a>
+                <a href="{% url 'apartment_delete' apartment.pk %}" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Видалити
+                </a>
+            {% endif %}
         </div>
     </div>
 

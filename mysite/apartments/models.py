@@ -1,10 +1,10 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 
 def validate_positive(value):
-    """Валідатор для перевірки позитивних значень"""
     if value <= 0:
         raise ValidationError('Значення повинно бути більше 0')
 
@@ -54,6 +54,13 @@ class Apartment(models.Model):
         verbose_name='Адреса',
         help_text='Повна адреса квартири'
     )
+    image = models.ImageField(
+        upload_to='apartments/',
+        verbose_name='Фото',
+        help_text='Фото квартири',
+        blank=True,
+        null=True
+    )
     is_available = models.BooleanField(
         default=True,
         verbose_name='Доступна',
@@ -77,7 +84,6 @@ class Apartment(models.Model):
         return f"{self.title} - {self.price}$"
 
     def get_type_display_ua(self):
-        """Українська версія типу квартири"""
         type_dict = {
             'ST': 'Студія',
             '1B': '1-кімнатна',
@@ -86,3 +92,61 @@ class Apartment(models.Model):
             'PH': 'Пентхаус',
         }
         return type_dict.get(self.apartment_type, self.get_apartment_type_display())
+
+
+class Booking(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Очікує підтвердження'),
+        ('confirmed', 'Підтверджено'),
+        ('cancelled', 'Скасовано'),
+        ('completed', 'Завершено'),
+    ]
+
+    apartment = models.ForeignKey(
+        Apartment,
+        on_delete=models.CASCADE,
+        related_name='bookings',
+        verbose_name='Квартира'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='bookings',
+        verbose_name='Користувач'
+    )
+    start_date = models.DateField(
+        verbose_name='Дата початку'
+    )
+    end_date = models.DateField(
+        verbose_name='Дата закінчення'
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending',
+        verbose_name='Статус'
+    )
+    total_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name='Загальна ціна'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата створення'
+    )
+    notes = models.TextField(
+        blank=True,
+        verbose_name='Примітки'
+    )
+
+    class Meta:
+        verbose_name = 'Бронювання'
+        verbose_name_plural = 'Бронювання'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Бронювання {self.apartment.title} - {self.user.username}"
+
+    def calculate_days(self):
+        return (self.end_date - self.start_date).days

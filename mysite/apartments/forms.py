@@ -1,15 +1,14 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Apartment
+from .models import Apartment, Booking
+from datetime import date
 
 
 class ApartmentForm(forms.ModelForm):
-    """Форма для створення та редагування квартир з валідацією"""
-    
     class Meta:
         model = Apartment
         fields = ['title', 'description', 'apartment_type', 'price', 
-                  'square_meters', 'floor', 'address', 'is_available']
+                  'square_meters', 'floor', 'address', 'image', 'is_available']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -41,6 +40,9 @@ class ApartmentForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Повна адреса'
             }),
+            'image': forms.FileInput(attrs={
+                'class': 'form-control'
+            }),
             'is_available': forms.CheckboxInput(attrs={
                 'class': 'form-check-input'
             })
@@ -53,18 +55,17 @@ class ApartmentForm(forms.ModelForm):
             'square_meters': 'Площа (м²)',
             'floor': 'Поверх',
             'address': 'Адреса',
+            'image': 'Фото квартири',
             'is_available': 'Доступна для продажу'
         }
 
     def clean_title(self):
-        """Валідація назви - мінімум 5 символів"""
         title = self.cleaned_data.get('title')
         if len(title) < 5:
             raise ValidationError('Назва повинна містити мінімум 5 символів')
         return title
 
     def clean_price(self):
-        """Валідація ціни - повинна бути більше 0 та не більше 10 мільйонів"""
         price = self.cleaned_data.get('price')
         if price <= 0:
             raise ValidationError('Ціна повинна бути більше 0')
@@ -73,7 +74,6 @@ class ApartmentForm(forms.ModelForm):
         return price
 
     def clean_square_meters(self):
-        """Валідація площі - від 10 до 1000 м²"""
         square_meters = self.cleaned_data.get('square_meters')
         if square_meters < 10:
             raise ValidationError('Площа повинна бути мінімум 10 м²')
@@ -82,7 +82,6 @@ class ApartmentForm(forms.ModelForm):
         return square_meters
 
     def clean_floor(self):
-        """Валідація поверху - від 1 до 100"""
         floor = self.cleaned_data.get('floor')
         if floor < 1:
             raise ValidationError('Поверх повинен бути мінімум 1')
@@ -91,15 +90,60 @@ class ApartmentForm(forms.ModelForm):
         return floor
 
     def clean_address(self):
-        """Валідація адреси - мінімум 10 символів"""
         address = self.cleaned_data.get('address')
         if len(address) < 10:
             raise ValidationError('Адреса повинна містити мінімум 10 символів')
         return address
 
     def clean_description(self):
-        """Валідація опису - мінімум 20 символів"""
         description = self.cleaned_data.get('description')
         if len(description) < 20:
             raise ValidationError('Опис повинен містити мінімум 20 символів')
         return description
+
+
+class BookingForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ['start_date', 'end_date', 'notes']
+        widgets = {
+            'start_date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type': 'date'
+            }),
+            'end_date': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type': 'date'
+            }),
+            'notes': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Додаткові побажання або коментарі',
+                'rows': 3
+            })
+        }
+        labels = {
+            'start_date': 'Дата початку',
+            'end_date': 'Дата закінчення',
+            'notes': 'Примітки'
+        }
+
+    def clean_start_date(self):
+        start_date = self.cleaned_data.get('start_date')
+        if start_date < date.today():
+            raise ValidationError('Дата початку не може бути в минулому')
+        return start_date
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+
+        if start_date and end_date:
+            if end_date <= start_date:
+                raise ValidationError('Дата закінчення повинна бути пізніше дати початку')
+            
+            days = (end_date - start_date).days
+            if days < 1:
+                raise ValidationError('Мінімальний термін бронювання - 1 день')
+
+        return cleaned_data

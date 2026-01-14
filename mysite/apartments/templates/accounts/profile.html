@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4"><i class="fas fa-user"></i> Профіль користувача</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-circle fa-5x text-primary mb-3"></i>
+                    <h4>{{ user.username }}</h4>
+                    <p class="text-muted">{{ user.email }}</p>
+                    <hr>
+                    <p><strong>Дата реєстрації:</strong><br>{{ user.date_joined|date:"d.m.Y" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar-check"></i> Мої бронювання
+                        <span class="badge bg-primary">{{ bookings.count }}</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if bookings %}
+                        <div class="list-group">
+                            {% for booking in bookings %}
+                                <a href="{% url 'booking_detail' booking.pk %}" 
+                                   class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ booking.apartment.title }}</h6>
+                                        <small>
+                                            {% if booking.status == 'pending' %}
+                                                <span class="badge bg-warning">Очікує</span>
+                                            {% elif booking.status == 'confirmed' %}
+                                                <span class="badge bg-success">Підтверджено</span>
+                                            {% elif booking.status == 'cancelled' %}
+                                                <span class="badge bg-danger">Скасовано</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Завершено</span>
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                    <p class="mb-1">
+                                        <i class="fas fa-calendar"></i> 
+                                        {{ booking.start_date|date:"d.m.Y" }} - {{ booking.end_date|date:"d.m.Y" }}
+                                    </p>
+                                    <small class="text-success">
+                                        <i class="fas fa-dollar-sign"></i> {{ booking.total_price }}
+                                    </small>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center py-4">
+                            <i class="far fa-calendar fa-3x mb-3"></i><br>
+                            У вас поки немає бронювань.
+                        </p>
+                        <div class="text-center">
+                            <a href="{% url 'apartment_list' %}" class="btn btn-primary">
+                                Переглянути квартири
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
